@@ -10,7 +10,7 @@
               class="text-h4 text-uppercase text-white fredoka"
               style="min-width: 220px"
             >
-              Welcome!
+              Welcome! some change
             </div>
             <div class="text-white q-my-sm text-subtitle1">
               Please sign in to your account to get started!
