@@ -1,42 +1,41 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="hHh Lpr lFf">
+    <q-header>
       <q-toolbar>
         <q-btn
           flat
           dense
           round
-          icon="menu"
+          icon="mdi-menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+        <q-toolbar-title> My TODO </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>
+          <q-btn
+            flat
+            round
+            padding="2px 10px 4px 4px"
+            icon="mdi-logout"
+            @click="logout"
+          />
+        </div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+      <q-toolbar class="bg-primary"> </q-toolbar>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+      <q-item class="bg-grey-3">
+        <q-item-section>Lists</q-item-section>
+        <q-item-section side>
+          <CreateTodoListButton icon="mdi-plus" flat round size="sm" />
+        </q-item-section>
+      </q-item>
+
+      <TodoListsList />
     </q-drawer>
 
     <q-page-container>
@@ -46,61 +45,39 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { getAuth, signOut } from "firebase/auth";
+import { Notify } from "quasar";
+import CreateTodoListButton from "src/components/CreateTodoListButton.vue";
+import TodoListsList from "src/components/TodoListsList.vue";
 
-defineOptions({
-  name: 'MainLayout'
-})
+// Reactive state for drawer
+const leftDrawerOpen = ref(false);
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+// Router instance for navigation
+const router = useRouter();
+
+// Toggle the left drawer
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+};
+
+// Logout function to sign out the user
+const logout = async () => {
+  const auth = getAuth();
+  try {
+    await signOut(auth); // Firebase signOut
+    Notify.create({
+      type: "positive",
+      message: "You have successfully logged out!",
+    });
+    router.push("/new-auth/new-login"); // Redirect to login page
+  } catch (error) {
+    Notify.create({
+      type: "negative",
+      message: `Logout failed: ${error.message}`,
+    });
   }
-]
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+};
 </script>

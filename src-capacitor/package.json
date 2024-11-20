@@ -1,0 +1,13 @@
+{
+  "name": "fridge-monitor",
+  "version": "0.0.1",
+  "description": "A fridge monitor for temperature and humidity",
+  "author": "j-wzr <joshuamwesigwa58@gmail.com>",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  }
+}
